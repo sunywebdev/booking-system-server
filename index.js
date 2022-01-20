@@ -179,7 +179,8 @@ async function run() {
 			res.send(bookings);
 			console.log("Found all bookings", bookings);
 		});
-		//To Show all cars
+		
+		//To Show all cars 
 		app.get("/cars", async (req, res) => {
 			console.log(req.query);
 			const get = carsCollection.find({});
