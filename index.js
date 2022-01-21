@@ -179,8 +179,8 @@ async function run() {
 			res.send(bookings);
 			console.log("Found all bookings", bookings);
 		});
-		
-		//To Show all cars 
+
+		//To Show all cars
 		app.get("/cars", async (req, res) => {
 			console.log(req.query);
 			const get = carsCollection.find({});
@@ -198,6 +198,28 @@ async function run() {
 			const result = await bookingsCollection.findOne(findId);
 			res.send(result);
 			console.log("Found one", result);
+		});
+
+		// To store/update bookings position
+		app.put("/bookingsCompleted/:id", async (req, res) => {
+			const id = req.params.id;
+			console.log("Request to update ", id);
+			const projectId = { _id: ObjectId(id) };
+			const updatedReq = req.body;
+			console.log("Comming form UI", updatedReq);
+			const options = { upsert: true };
+			const updateProject = {
+				$set: {
+					position: updatedReq?.position,
+				},
+			};
+			const result = await bookingsCollection.updateOne(
+				projectId,
+				updateProject,
+				options,
+			);
+			res.json(result);
+			console.log("Updated Successfully", result);
 		});
 		/* ------
         ------delete all
