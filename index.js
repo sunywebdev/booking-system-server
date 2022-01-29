@@ -46,6 +46,7 @@ async function run() {
 		const usersCollection = database.collection("users");
 		const bookingsCollection = database.collection("bookings");
 		const carsCollection = database.collection("cars");
+		const companyCollection = database.collection("companylist");
 
 		//To add new user when login or signup
 		app.post("/users", async (req, res) => {
@@ -148,6 +149,14 @@ async function run() {
 			console.log("Successfully Added new bookings ", result);
 			res.json(result);
 		});
+		//To post new companylist
+		app.post("/companylist", async (req, res) => {
+			const companylist = req.body;
+			console.log("Request from UI ", companylist);
+			const result = await companyCollection.insertOne(companylist);
+			console.log("Successfully Added new companylist ", result);
+			res.json(result);
+		});
 		//To post new cars
 		app.post("/cars", async (req, res) => {
 			const cars = req.body;
@@ -169,6 +178,15 @@ async function run() {
 			users = await get.toArray();
 			res.send(users);
 			console.log("Found all users", users);
+		});
+		//To Show all companylist
+		app.get("/companylist", async (req, res) => {
+			console.log(req.query);
+			const get = companyCollection.find({});
+			console.log("Request to find companylist");
+			companylist = await get.toArray();
+			res.send(companylist);
+			console.log("Found all companylist", companylist);
 		});
 		//To Show all bookings
 		app.get("/bookings", async (req, res) => {
@@ -233,6 +251,15 @@ async function run() {
 			const result = await bookingsCollection.deleteOne(deleteId);
 			res.send(result);
 			console.log("bookings Successfully Deleted", result);
+		});
+		//To Delete companylist one by one
+		app.delete("/companylist/:id", async (req, res) => {
+			const id = req.params.id;
+			console.log("Request to delete ", id);
+			const deleteId = { _id: ObjectId(id) };
+			const result = await companyCollection.deleteOne(deleteId);
+			res.send(result);
+			console.log("companylist Successfully Deleted", result);
 		});
 		//To Delete cars one by one
 		app.delete("/cars/:id", async (req, res) => {
