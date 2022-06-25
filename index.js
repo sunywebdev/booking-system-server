@@ -217,6 +217,42 @@ async function run() {
 			res.send(result);
 			console.log("Found one", result);
 		});
+		// To store/update single card data
+		app.put("/cars/:id", async (req, res) => {
+			const id = req.params.id;
+			console.log("Request to update ", id);
+			const projectId = { _id: ObjectId(id) };
+			const updatedReq = req.body;
+			console.log("Comming form UI", updatedReq);
+			const options = { upsert: true };
+			const updateProject = {
+				$set: {
+					carName: updatedReq.carName,
+					carInfo: updatedReq.carInfo,
+					carLuggage: updatedReq.carLuggage,
+					carPassenger: updatedReq.carPassenger,
+					carPhoto1: updatedReq.carPhoto1,
+					carPhoto2: updatedReq.carPhoto2,
+					carPhoto3: updatedReq.carPhoto3,
+				},
+			};
+			const result = await carsCollection.updateOne(
+				projectId,
+				updateProject,
+				options,
+			);
+			res.json(result);
+			console.log("Updated Successfully", result);
+		});
+		//To load single cars by id
+		app.get("/cars/:id", async (req, res) => {
+			const id = req.params.id;
+			console.log("Request to find ", id);
+			const findId = { _id: ObjectId(id) };
+			const result = await carsCollection.findOne(findId);
+			res.send(result);
+			console.log("Found one", result);
+		});
 
 		// To store/update bookings position
 		app.put("/bookingsCompleted/:id", async (req, res) => {
